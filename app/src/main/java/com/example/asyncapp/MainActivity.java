@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
         CallableProcess getCur = new CallableProcess(currencyOption);
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Future<ArrayList> future = executorService.submit(getCur);
-
-        listViewAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, future.get(100, TimeUnit.MILLISECONDS) );
-        exchangeRateList.setAdapter(listViewAdapter);
-
+        if(future.isDone()) {
+            listViewAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, future.get(100, TimeUnit.MILLISECONDS));
+            exchangeRateList.setAdapter(listViewAdapter);
+        }
 
     }
 }

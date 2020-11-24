@@ -13,19 +13,13 @@ public class CallableProcess implements Callable<ArrayList> {
         chosenCurrency=currency;
     }
 
-    public ArrayList<String> Call() throws InvalidParameterException{
+
+
+    @Override
+    public ArrayList<String> call() throws Exception {
         currencyList.set(0,chosenCurrency);
 
-
-
         return currencyList;
-    }
-
-   @Override
-    public ArrayList<String> call() throws Exception {
-        ArrayList<String> name=new ArrayList();
-        name.set(0, Thread.currentThread().getName());
-        return name;
     }
 
 }
