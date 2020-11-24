@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AsyncApp</string>
+    <string name="currencyName"></string>
+    <string name="getExchangeRates">Get Exchange Rates</string>
+    <string name="currencyOptionsText">Choose currency:</string>
+    <string-array name="optionsForSpinner">
+        <item>EUR - Euro</item>
+        <item>USD - United States Dollar</item>
+        <item>GBP - Great Britain Pound</item>
+    </string-array>
+
+</resources>
