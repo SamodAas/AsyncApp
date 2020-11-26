@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner optionSpinner;
     private ArrayAdapter<CharSequence> spinnerAdapter;
     private ArrayAdapter<String> listViewAdapter;
-    private ArrayList<String> currencyInfo = new ArrayList<>();
+    public static ArrayList<String> currencyInfo = new ArrayList<>();
     public static String currencyOption;
     private ListView exchangeRateList;
     private TextView chosenCurrency;
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        Collections.copy(currencyInfo,DataManager.getRateFromECB(currencyOption));
         listViewAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,currencyInfo);
         exchangeRateList.setAdapter(listViewAdapter);
         listViewAdapter.notifyDataSetChanged();
