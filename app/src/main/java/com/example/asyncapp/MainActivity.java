@@ -7,8 +7,17 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -17,14 +26,17 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 public class MainActivity extends AppCompatActivity {
 
     private Spinner optionSpinner;
     private ArrayAdapter<CharSequence> spinnerAdapter;
     private ArrayAdapter<String> listViewAdapter;
-    private ArrayList currencyInfo;
-    private String currencyOption;
+    private ArrayList<String> currencyInfo = new ArrayList<>();
+    public static String currencyOption;
     private ListView exchangeRateList;
+    private TextView chosenCurrency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +45,33 @@ public class MainActivity extends AppCompatActivity {
 
         this.exchangeRateList = findViewById(R.id.currencyListView);
         this.optionSpinner = findViewById(R.id.currencyOptions);
+        this.chosenCurrency = findViewById(R.id.currencyDisplay);
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.optionsForSpinner, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         optionSpinner.setAdapter(spinnerAdapter);
 
     }
 
-    public void getExchangeRates(View view) throws InterruptedException, ExecutionException, TimeoutException {
+    public void getExchangeRates(View view) throws InterruptedException, ExecutionException, TimeoutException, ParserConfigurationException, SAXException, IOException {
+
+        currencyInfo.clear();
         currencyOption = optionSpinner.getSelectedItem().toString();
-        CallableProcess getCur = new CallableProcess(currencyOption);
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Future<ArrayList> future = executorService.submit(getCur);
-        if(future.isDone()) {
-            listViewAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, future.get(100, TimeUnit.MILLISECONDS));
-            exchangeRateList.setAdapter(listViewAdapter);
+        ExecutorService backgroundProc = Executors.newSingleThreadExecutor();
+        backgroundProc.submit(() -> {
+            try {
+                DataManager.getRateFromECB(currencyOption);
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+            }
+
+        });
+        Collections.copy(currencyInfo,DataManager.getRateFromECB(currencyOption));
+        listViewAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,currencyInfo);
+        exchangeRateList.setAdapter(listViewAdapter);
+        listViewAdapter.notifyDataSetChanged();
+        chosenCurrency.setText(currencyOption);
+
         }
 
     }
-}
