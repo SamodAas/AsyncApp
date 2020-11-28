@@ -29,7 +29,7 @@ public class XmlParser {
             Document doc = xmlDocBuilder.parse(stream);
             NodeList rateNodes = doc.getElementsByTagName(title);
 
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 1; i < rateNodes.getLength(); ++i) {
                 String nodeContent = rateNodes.item(i).getTextContent();
                 MainActivity.currencyInfo.add(nodeContent);
             }

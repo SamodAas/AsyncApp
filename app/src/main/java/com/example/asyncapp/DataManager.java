@@ -14,7 +14,7 @@ public class DataManager {
 
     public static void getRateFromECB(String currencyCode) throws IOException, ParserConfigurationException, SAXException {
 
-            String url = String.format("http://www.floatrates.com/daily/%s.xml",currencyCode);
+            String url = String.format("https://www.floatrates.com/daily/%s.xml",currencyCode);
             InputStream stream = downloadUrl(url);
         XmlParser.getRateFromECB(stream);
 

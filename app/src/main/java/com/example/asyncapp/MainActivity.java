@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static String currencyOption;
     private ListView exchangeRateList;
     private TextView chosenCurrency;
+    private String loading = "Fetching...";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        backgroundProc.shutdown();
+        try {
+            backgroundProc.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+        }
+
         listViewAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,currencyInfo);
         exchangeRateList.setAdapter(listViewAdapter);
         listViewAdapter.notifyDataSetChanged();
